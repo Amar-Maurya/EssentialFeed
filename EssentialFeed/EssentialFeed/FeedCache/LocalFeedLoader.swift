@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class LoadFeedCache {
+public final class LocalFeedLoader {
     var store: FeedStore
     var timestamp: Date
     public init(store: FeedStore, timestamp: Date) {
@@ -14,7 +14,9 @@ public final class LoadFeedCache {
         self.timestamp = timestamp
     }
     
-    public func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
+    public typealias SaveResult = Error?
+    
+    public func save(_ items: [FeedItem], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedFeed(completion: { [weak self] error in
             guard let self = self else { return }
             if let cacheDeletionError = error {
@@ -25,7 +27,7 @@ public final class LoadFeedCache {
         })
     }
     
-    private func cache(_ items: [FeedItem], with completion: @escaping (Error?) -> Void) {
+    private func cache(_ items: [FeedItem], with completion: @escaping (SaveResult) -> Void) {
         self.store.insert(items, timestamp: timestamp) { [weak self] error in
             guard self != nil else { return }
             completion(error)

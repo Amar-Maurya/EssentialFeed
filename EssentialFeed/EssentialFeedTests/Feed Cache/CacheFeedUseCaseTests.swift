@@ -118,8 +118,8 @@ private class FeedStoreSpy: FeedStore {
      
      func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
          let store: FeedStoreSpy = FeedStoreSpy()
-         var sut: LoadFeedCache? = LoadFeedCache(store: store, timestamp: Date.init())
-         var receivedError = [Error?]()
+         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: Date.init())
+         var receivedError = [LocalFeedLoader.SaveResult]()
          
          sut?.save([uniqueItem()]){ receivedError.append($0) }
          
@@ -131,8 +131,8 @@ private class FeedStoreSpy: FeedStore {
      
      func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
          let store: FeedStoreSpy = FeedStoreSpy()
-         var sut: LoadFeedCache? = LoadFeedCache(store: store, timestamp: Date.init())
-         var receivedError = [Error?]()
+         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: Date.init())
+         var receivedError = [LocalFeedLoader.SaveResult]()
          
          sut?.save([uniqueItem()]){ receivedError.append($0) }
          store.completeDeletionSuccessfully()
@@ -143,7 +143,7 @@ private class FeedStoreSpy: FeedStore {
      }
      
      // helper
-     func execute(sut: LoadFeedCache, file: StaticString = #filePath, line: UInt = #line, toCompleteWithError: NSError?, when onAction: () -> ()) {
+     func execute(sut: LocalFeedLoader, file: StaticString = #filePath, line: UInt = #line, toCompleteWithError: NSError?, when onAction: () -> ()) {
          let exp = self.expectation(description: "wait for save completion")
          var receivedError: Error?
          sut.save([uniqueItem()]) { error in
@@ -155,9 +155,9 @@ private class FeedStoreSpy: FeedStore {
          XCTAssertEqual(receivedError as NSError?, toCompleteWithError)
      }
     
-     private func makeSUT(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (LoadFeedCache, FeedStoreSpy) {
+     private func makeSUT(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (LocalFeedLoader, FeedStoreSpy) {
          let store = FeedStoreSpy()
-         let sut = LoadFeedCache(store: store, timestamp: currentDate)
+         let sut = LocalFeedLoader(store: store, timestamp: currentDate)
          trackForMemoryLeaks(store,file: file, line: line)
          trackForMemoryLeaks(sut,file: file, line: line)
     
