@@ -46,9 +46,12 @@ class FeedStore {
      
      // helper
      
-     private func makeSUT() -> (LoadFeedCache, FeedStore) {
+     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (LoadFeedCache, FeedStore) {
          let store = FeedStore()
          let sut = LoadFeedCache(store: store)
+         trackForMemoryLeaks(store,file: file, line: line)
+         trackForMemoryLeaks(sut,file: file, line: line)
+    
          return (sut, store)
      }
      
