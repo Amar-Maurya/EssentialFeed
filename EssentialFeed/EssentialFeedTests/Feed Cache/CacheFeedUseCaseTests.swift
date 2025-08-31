@@ -22,12 +22,16 @@ class LoadFeedCache {
             if let cacheDeletionError = error {
                 completion(cacheDeletionError)
             } else {
-                self.store.insert(items, timestamp: timestamp) { [weak self] error in
-                    guard self != nil else { return }
-                    completion(error)
-                }
+                self.cache(items, with: completion)
             }
         })
+    }
+    
+    func cache(_ items: [FeedItem], with completion: @escaping (Error?) -> Void) {
+        self.store.insert(items, timestamp: timestamp) { [weak self] error in
+            guard self != nil else { return }
+            completion(error)
+        }
     }
 }
 
