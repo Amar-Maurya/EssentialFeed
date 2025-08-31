@@ -8,41 +8,6 @@
 import XCTest
 import EssentialFeed
 
-class LoadFeedCache {
-    var store: FeedStore
-    var timestamp: Date
-    init(store: FeedStore, timestamp: Date) {
-        self.store = store
-        self.timestamp = timestamp
-    }
-    
-    func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-        store.deleteCachedFeed(completion: { [weak self] error in
-            guard let self = self else { return }
-            if let cacheDeletionError = error {
-                completion(cacheDeletionError)
-            } else {
-                self.cache(items, with: completion)
-            }
-        })
-    }
-    
-    func cache(_ items: [FeedItem], with completion: @escaping (Error?) -> Void) {
-        self.store.insert(items, timestamp: timestamp) { [weak self] error in
-            guard self != nil else { return }
-            completion(error)
-        }
-    }
-}
-
-protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-    
-    func deleteCachedFeed(completion: @escaping DeletionCompletion)
-    func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion)
-}
-
 private class FeedStoreSpy: FeedStore {
     
     var deletionCompletions = [DeletionCompletion]()
