@@ -17,7 +17,8 @@ class LoadFeedCache {
     }
     
     func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-        store.deleteCachedFeed(completion: { [unowned self] error in
+        store.deleteCachedFeed(completion: { [weak self] error in
+            guard let self = self else { return }  // if self is gone, ignore
             if error == nil {
                 self.store.insert(items, timestamp: timestamp, completion: completion)
             } else {
@@ -143,6 +144,20 @@ private class FeedStoreSpy: FeedStore {
          })
      }
      
+     func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
+         let store: FeedStoreSpy = FeedStoreSpy()
+         var sut: LoadFeedCache? = LoadFeedCache(store: store, timestamp: Date.init())
+         var receivedError = [Error?]()
+         
+         sut?.save([uniqueItem()]){ receivedError.append($0) }
+         
+         sut = nil
+         store.completeDeletion(with: anyNSError())
+         
+         XCTAssertTrue(receivedError.isEmpty)
+     }
+     
+     // helper
      func execute(sut: LoadFeedCache, file: StaticString = #filePath, line: UInt = #line, toCompleteWithError: NSError?, when onAction: () -> ()) {
          let exp = self.expectation(description: "wait for save completion")
          var receivedError: Error?
@@ -154,9 +169,7 @@ private class FeedStoreSpy: FeedStore {
          wait(for: [exp], timeout: 1.0)
          XCTAssertEqual(receivedError as NSError?, toCompleteWithError)
      }
-     
-     // helper
-     
+    
      private func makeSUT(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (LoadFeedCache, FeedStoreSpy) {
          let store = FeedStoreSpy()
          let sut = LoadFeedCache(store: store, timestamp: currentDate)
