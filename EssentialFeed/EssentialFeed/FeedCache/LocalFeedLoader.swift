@@ -33,4 +33,8 @@ public final class LocalFeedLoader {
             completion(error)
         }
     }
+    
+    public func load() {
+        self.store.retrieve()
+    }
 }
