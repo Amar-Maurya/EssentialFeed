@@ -17,7 +17,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     
     func test_load_requestsCacheRetrival() {
         let (sut, store) = makeSUT()
-        sut.load{_ in}
+        sut.load{ _ in }
         XCTAssertEqual(store.receivedMessage, [.retrival])
     }
     
@@ -27,8 +27,13 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         var retriveError: Error?
         
         let exp = expectation(description: "Retrieve Cache Error")
-        sut.load { error in
-            retriveError = error
+        sut.load { result in
+            switch result {
+            case let .failure(error):
+                retriveError = error
+            default:
+                XCTFail("get result \(result) instead of error")
+            }
             exp.fulfill()
         }
         
