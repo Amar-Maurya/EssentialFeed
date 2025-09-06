@@ -38,7 +38,7 @@ import EssentialFeed
      func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
          let timestamp = Date()
          let feed = uniqueImageFeed()
-         let (sut, store) = makeSUT(currentDate: timestamp)
+         let (sut, store) = makeSUT(currentDate: { timestamp })
          sut.save(feed.model) { _ in }
          store.completeDeletionSuccessfully()
          
@@ -76,7 +76,7 @@ import EssentialFeed
      
      func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
          let store: FeedStoreSpy = FeedStoreSpy()
-         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: Date.init())
+         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
          var receivedError = [LocalFeedLoader.SaveResult]()
          
          sut?.save([uniqueImage()]){ receivedError.append($0) }
@@ -89,7 +89,7 @@ import EssentialFeed
      
      func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
          let store: FeedStoreSpy = FeedStoreSpy()
-         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: Date.init())
+         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
          var receivedError = [LocalFeedLoader.SaveResult]()
          
          sut?.save(uniqueImageFeed().model){ receivedError.append($0) }
@@ -113,9 +113,9 @@ import EssentialFeed
          XCTAssertEqual(receivedError as NSError?, toCompleteWithError)
      }
     
-     private func makeSUT(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (LocalFeedLoader, FeedStoreSpy) {
+     private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (LocalFeedLoader, FeedStoreSpy) {
          let store = FeedStoreSpy()
-         let sut = LocalFeedLoader(store: store, timestamp: currentDate)
+         let sut = LocalFeedLoader(store: store, currentDate: currentDate)
          trackForMemoryLeaks(store,file: file, line: line)
          trackForMemoryLeaks(sut,file: file, line: line)
     

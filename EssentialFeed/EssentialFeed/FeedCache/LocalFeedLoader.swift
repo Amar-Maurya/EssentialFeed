@@ -8,14 +8,20 @@ import Foundation
 
 public final class LocalFeedLoader {
     var store: FeedStore
-    var timestamp: Date
-    public init(store: FeedStore, timestamp: Date) {
-        self.store = store
-        self.timestamp = timestamp
-    }
-    
+    private let currentDate: () -> Date
     public typealias SaveResult = Error?
     public typealias LoadResult = LoadFeedResult
+    private let calendar = Calendar(identifier: .gregorian)
+    private var maxCacheAgeInDays: Int {
+        return 7
+    }
+    
+    public init(store: FeedStore, currentDate: @escaping () -> Date) {
+        self.store = store
+        self.currentDate = currentDate
+    }
+    
+ 
     
     public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedFeed(completion: { [weak self] error in
@@ -29,21 +35,30 @@ public final class LocalFeedLoader {
     }
     
     private func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult) -> Void) {
-        self.store.insert(feed.toLocal(), timestamp: timestamp) { [weak self] error in
+        self.store.insert(feed.toLocal(), timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
             completion(error)
         }
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        self.store.retrieve { error in
-            if let error = error  {
-                completion(.failure(error))
-            } else {
+        self.store.retrieve { [unowned self] result in
+            switch result {
+            case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp) :
+                completion(.success(localFeedImage.toModel()))
+            case .empty, .found :
                 completion(.success([]))
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
-       
+    }
+    
+    private func validate(timeStamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
     }
 }
 
@@ -51,6 +66,14 @@ private extension Array where Element == FeedImage {
     
     func toLocal() -> [LocalFeedImage] {
         map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
+    }
+    
+}
+
+private extension Array where Element == LocalFeedImage {
+    
+    func toModel() -> [FeedImage] {
+        map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
     }
     
 }

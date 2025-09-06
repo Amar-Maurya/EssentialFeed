@@ -6,10 +6,16 @@
 //
 import Foundation
 
+public enum RetrieveCacheFeedResult {
+    case empty
+    case found([LocalFeedImage], Date)
+    case failure(Error)
+}
+
 public protocol FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
-    typealias RetrivalCompletion = (Error?) -> Void
+    typealias RetrivalCompletion = (RetrieveCacheFeedResult) -> Void
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion)
     func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion)
