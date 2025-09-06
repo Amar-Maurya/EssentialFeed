@@ -12,19 +12,19 @@ class FeedStoreSpy: FeedStore {
     var deletionCompletions = [DeletionCompletion]()
     var insertionCompletions = [InsertionCompletion]()
     var retrivalCompletions = [RetrivalCompletion]()
-    var insertions = [(items: [LocalFeedItem], timestamp: Date)]()
+    var insertions = [(items: [LocalFeedImage], timestamp: Date)]()
     private(set) var receivedMessage = [ReceivedMessage]()
     
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
-        case insert([LocalFeedItem], Date)
+        case insert([LocalFeedImage], Date)
         case retrival
     }
     
-    func insert(_ items: [LocalFeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
+    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         insertionCompletions.append(completion)
-        insertions.append((items, timestamp))
-        receivedMessage.append(.insert(items, timestamp))
+        insertions.append((feed, timestamp))
+        receivedMessage.append(.insert(feed, timestamp))
     }
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
