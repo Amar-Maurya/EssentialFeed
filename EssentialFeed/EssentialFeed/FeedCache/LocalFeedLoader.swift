@@ -8,14 +8,16 @@ import Foundation
 
 public final class LocalFeedLoader {
     var store: FeedStore
-    var timestamp: Date
-    public init(store: FeedStore, timestamp: Date) {
-        self.store = store
-        self.timestamp = timestamp
-    }
-    
+    private let currentDate: () -> Date
     public typealias SaveResult = Error?
     public typealias LoadResult = LoadFeedResult
+    
+    public init(store: FeedStore, currentDate: @escaping () -> Date) {
+        self.store = store
+        self.currentDate = currentDate
+    }
+    
+ 
     
     public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedFeed(completion: { [weak self] error in
@@ -29,23 +31,30 @@ public final class LocalFeedLoader {
     }
     
     private func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult) -> Void) {
-        self.store.insert(feed.toLocal(), timestamp: timestamp) { [weak self] error in
+        self.store.insert(feed.toLocal(), timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
             completion(error)
         }
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        self.store.retrieve { result in
+        self.store.retrieve { [unowned self] result in
             switch result {
-            case .empty:
-                completion(.success([]))
-            case let .found(localFeedImage, _):
+            case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp) :
                 completion(.success(localFeedImage.toModel()))
+            case .empty, .found :
+                completion(.success([]))
             case let .failure(error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func validate(timeStamp: Date) -> Bool {
+        guard let maxCacheAge = Calendar.current.date(byAdding: .day, value: 7, to: timeStamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
     }
 }
 
