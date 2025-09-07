@@ -31,7 +31,13 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         store.completeRetrival(with: error)
         XCTAssertEqual(store.receivedMessage, [.retrival, .deleteCachedFeed])
     }
-    
+    func test_validateCache_doesNotDeleteCacheOnEmptyCache() {
+        let (sut, store) = makeSUT()
+        sut.validateCache()
+        store.completeRetrivalWithEmptyCache()
+        XCTAssertEqual(store.receivedMessage, [.retrival])
+    }
+   
     private func anyNSError() -> NSError {
         return NSError(domain: "any error", code: 0)
     }
