@@ -43,12 +43,11 @@ public final class LocalFeedLoader {
         self.store.retrieve { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp) :
+            case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp):
                 completion(.success(localFeedImage.toModel()))
             case .empty:
                 completion(.success([]))
-            case.found :
-                store.deleteCachedFeed{ _ in }
+            case.found:
                 completion(.success([]))
             case let .failure(error):
                 completion(.failure(error))
@@ -61,7 +60,9 @@ public final class LocalFeedLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedFeed{ _ in }
-            default:
+            case let .found(_, timestamp) where !self.validate(timeStamp: timestamp):
+                self.store.deleteCachedFeed{ _ in }
+            case .found, .empty:
                 break
             }
         }
