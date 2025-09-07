@@ -42,7 +42,8 @@ public final class LocalFeedLoader {
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        self.store.retrieve { [unowned self] result in
+        self.store.retrieve { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp) :
                 completion(.success(localFeedImage.toModel()))
