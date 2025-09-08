@@ -9,23 +9,11 @@ import Foundation
 public final class LocalFeedLoader {
     var store: FeedStore
     private let currentDate: () -> Date
-    private let calendar = Calendar(identifier: .gregorian)
-    private var maxCacheAgeInDays: Int {
-        return 7
-    }
     
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
-    
-    private func validate(timeStamp: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
-            return false
-        }
-        return currentDate() < maxCacheAge
-    }
-    
 }
 
 extension LocalFeedLoader {
@@ -58,7 +46,7 @@ extension LocalFeedLoader: FeedLoader {
         self.store.retrieve { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case let .found(localFeedImage, timestamp) where self.validate(timeStamp: timestamp):
+            case let .found(localFeedImage, timestamp) where FeedCachePolicy.validate(timeStamp: timestamp, against: self.currentDate()):
                 completion(.success(localFeedImage.toModel()))
             case .found, .empty:
                 completion(.success([]))
@@ -77,7 +65,7 @@ extension LocalFeedLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedFeed{ _ in }
-            case let .found(_, timestamp) where !self.validate(timeStamp: timestamp):
+            case let .found(_, timestamp) where !FeedCachePolicy.validate(timeStamp: timestamp, against: self.currentDate()):
                 self.store.deleteCachedFeed{ _ in }
             case .found, .empty:
                 break
