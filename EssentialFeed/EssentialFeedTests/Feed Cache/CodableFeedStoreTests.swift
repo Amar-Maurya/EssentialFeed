@@ -45,21 +45,23 @@ class CodableFeedStore {
     
    
     func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
+        guard let data = try? Data(contentsOf: storeURL) else {
+            return completion(.empty)
+        }
         let decoder = JSONDecoder()
-        guard let data = try?  Data(contentsOf: storeURL) else {
-            return completion(.empty)
+        do {
+            let feedImage = try decoder.decode(Cache.self, from: data)
+            completion(.found(feedImage.localFeed, feedImage.timestamp))
+        } catch {
+            completion(.failure(error))
         }
-        guard let feedImage = try? decoder.decode(Cache.self, from: data) else {
-            return completion(.empty)
-        }
-        completion(.found(feedImage.localFeed, feedImage.timestamp))
     }
     
     
     func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(Cache(feed: items.map(CodableFeedImage.init), timestamp: timestamp))
-        try? data.write(to: storeURL)
+        try! data.write(to: storeURL)
         return completion(nil)
     }
 }
