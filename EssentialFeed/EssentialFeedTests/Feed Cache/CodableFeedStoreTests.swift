@@ -60,9 +60,14 @@ class CodableFeedStore {
     
     func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
         let encoder = JSONEncoder()
-        let data = try! encoder.encode(Cache(feed: items.map(CodableFeedImage.init), timestamp: timestamp))
-        try! data.write(to: storeURL)
-        return completion(nil)
+        do {
+            let data = try encoder.encode(Cache(feed: items.map(CodableFeedImage.init), timestamp: timestamp))
+            try data.write(to: storeURL)
+            return completion(nil)
+        } catch {
+            completion(error)
+        }
+       
     }
 }
 
@@ -140,6 +145,18 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toExpected: .found(latestFeed, timestamp))
     }
     
+    func test_insert_invalidInsertedCacheValues() {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        
+        let latestFeed = uniqueImageFeed().local
+        let timestamp = Date()
+        let insertError = insert((feed: latestFeed, timestamp: timestamp), sut: sut)
+        
+        XCTAssertNotNil(insertError, "expected feed to inserted fail")
+        expect(sut, toExpected: .empty)
+    }
+    
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -148,7 +165,7 @@ final class CodableFeedStoreTests: XCTestCase {
     
     @discardableResult
     private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), sut: CodableFeedStore) -> Error? {
-        let exp = expectation(description: "Retrieve twice empty cache")
+        let exp = expectation(description: "insertion on empty cache")
         var insertionError: Error?
         sut.insert(cache.feed, timestamp: cache.timestamp) { receivedInsertionError in
             insertionError = receivedInsertionError
