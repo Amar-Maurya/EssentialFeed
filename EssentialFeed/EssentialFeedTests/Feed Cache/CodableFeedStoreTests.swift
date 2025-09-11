@@ -9,7 +9,7 @@ import XCTest
 import EssentialFeed
 
 
-class CodableFeedStore {
+class CodableFeedStore: FeedStore {
     
     private let storeURL: URL
     init(_ storeURL: URL) {
@@ -44,7 +44,7 @@ class CodableFeedStore {
     }
     
    
-    func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
+    func retrieve(completion: @escaping RetrivalCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.empty)
         }
@@ -58,7 +58,7 @@ class CodableFeedStore {
     }
     
     
-    func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
+    func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(Cache(feed: items.map(CodableFeedImage.init), timestamp: timestamp))
@@ -70,7 +70,7 @@ class CodableFeedStore {
        
     }
     
-    func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
             return completion(nil)
