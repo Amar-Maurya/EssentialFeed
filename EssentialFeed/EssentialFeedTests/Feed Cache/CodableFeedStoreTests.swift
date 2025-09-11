@@ -109,15 +109,16 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_retrieve_deliversFailureOnRetrievalError() {
-        let sut = makeSUT()
+        let storeURL = testSpecificStoreURL()
+        let sut = makeSUT(storeURL: storeURL)
         
-        try! "invalid json".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        try! "invalid json".write(to: storeURL, atomically: false, encoding: .utf8)
         
         expect(sut: sut, toExpected: .failure(anyNSError()))
     }
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore(testSpecificStoreURL())
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+        let sut = CodableFeedStore(storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
