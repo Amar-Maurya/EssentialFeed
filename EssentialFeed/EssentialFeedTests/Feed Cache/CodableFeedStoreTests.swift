@@ -207,14 +207,14 @@ final class CodableFeedStoreTests: XCTestCase {
      
     }
     
-    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> FeedStore {
         let sut = CodableFeedStore(storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
     @discardableResult
-    private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), sut: CodableFeedStore) -> Error? {
+    private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), sut: FeedStore) -> Error? {
         let exp = expectation(description: "insertion on empty cache")
         var insertionError: Error?
         sut.insert(cache.feed, timestamp: cache.timestamp) { receivedInsertionError in
@@ -225,12 +225,12 @@ final class CodableFeedStoreTests: XCTestCase {
         return insertionError
     }
     
-    private func expect(_ sut: CodableFeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: FeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toExpected: expectedResult)
         expect(sut, toExpected: expectedResult)
     }
     
-    private func expect(_ sut: CodableFeedStore, toExpected retrieval: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: FeedStore, toExpected retrieval: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
         let expect = expectation(description: "Retrieve cache")
         sut.retrieve { result in
             switch (result, retrieval) {
@@ -248,7 +248,7 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [expect], timeout: 1.0)
     }
     
-    private func deleteCache(_ sut: CodableFeedStore, file: StaticString = #file, line: UInt = #line) -> Error? {
+    private func deleteCache(_ sut: FeedStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let expect = expectation(description: "Delete cache")
         
         var expectedError: Error?
