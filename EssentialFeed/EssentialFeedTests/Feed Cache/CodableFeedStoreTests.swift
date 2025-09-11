@@ -108,6 +108,14 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .found(feed, timestamp))
     }
     
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        let sut = makeSUT()
+        
+        try! "invalid json".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        
+        expect(sut: sut, toExpected: .failure(anyNSError()))
+    }
+    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -132,7 +140,8 @@ final class CodableFeedStoreTests: XCTestCase {
         let expect = expectation(description: "Retrieve cache")
         sut.retrieve { result in
             switch (result, retrieval) {
-            case (.empty, .empty):
+            case (.empty, .empty)
+                ,(.failure, .failure):
                 break
             case let (.found(retriveFeed, retriveDate), .found(expectedFeed, expectedDate)):
                 XCTAssertEqual(retriveFeed, expectedFeed)
