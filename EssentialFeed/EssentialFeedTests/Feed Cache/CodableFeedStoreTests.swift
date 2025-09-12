@@ -157,7 +157,7 @@ final class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [op1, op2, op3], timeout: 5.0)
         
-        XCTAssertEqual(operationExpectation, [op1, op2, op3])
+        XCTAssertEqual(operationExpectation, [op1, op2, op3], "\(operationExpectation) did not run in expected order")
         
     }
     
