@@ -206,55 +206,6 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
         return sut
     }
     
-    @discardableResult
-    private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), sut: FeedStore) -> Error? {
-        let exp = expectation(description: "insertion on empty cache")
-        var insertionError: Error?
-        sut.insert(cache.feed, timestamp: cache.timestamp) { receivedInsertionError in
-            insertionError = receivedInsertionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        return insertionError
-    }
-    
-    private func expect(_ sut: FeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toExpected: expectedResult)
-        expect(sut, toExpected: expectedResult)
-    }
-    
-    private func expect(_ sut: FeedStore, toExpected retrieval: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
-        let expect = expectation(description: "Retrieve cache")
-        sut.retrieve { result in
-            switch (result, retrieval) {
-            case (.empty, .empty)
-                ,(.failure, .failure):
-                break
-            case let (.found(retriveFeed, retriveDate), .found(expectedFeed, expectedDate)):
-                XCTAssertEqual(retriveFeed, expectedFeed)
-                XCTAssertEqual(retriveDate, expectedDate)
-            default:
-                XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(result) and expected \(retrieval) instead")
-            }
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-    }
-    
-    @discardableResult
-    private func deleteCache(_ sut: FeedStore, file: StaticString = #file, line: UInt = #line) -> Error? {
-        let expect = expectation(description: "Delete cache")
-        
-        var expectedError: Error?
-        sut.deleteCachedFeed { receiveResult in
-            expectedError = receiveResult
-            expect.fulfill()
-        }
-        
-        wait(for: [expect], timeout: 1.0)
-        return expectedError
-    }
-    
     private func testSpecificStoreURL() -> URL {
         return cacheDirectory().appendingPathComponent("\(type(of:self)).store")
     }
