@@ -31,6 +31,7 @@
 		59DEFEC02E75444F006E9ED5 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DEFEBF2E754447006E9ED5 /* XCTestCase+FailableInsertFeedStoreSpecs.swift */; };
 		59DEFEC42E7544F0006E9ED5 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DEFEC32E7544E6006E9ED5 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */; };
 		59DEFECF2E7578B4006E9ED5 /* CoreDataFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DEFECE2E7578B4006E9ED5 /* CoreDataFeedStoreTests.swift */; };
+		59DEFED42E758955006E9ED5 /* FeedStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 59DEFED22E758955006E9ED5 /* FeedStore.xcdatamodeld */; };
 		59FDD74E2E6F1554002C0AC5 /* FeedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FDD74D2E6F1552002C0AC5 /* FeedCachePolicy.swift */; };
 		E750890B2E52C29700B71CF8 /* URLSessionHTTPCLientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E750890A2E52C29700B71CF8 /* URLSessionHTTPCLientTests.swift */; };
 		E788F9902E597FB100888881 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E788F98F2E597FB100888881 /* URLSessionHTTPClient.swift */; };
@@ -85,6 +86,7 @@
 		59DEFEBF2E754447006E9ED5 /* XCTestCase+FailableInsertFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailableInsertFeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		59DEFEC32E7544E6006E9ED5 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailableDeleteFeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		59DEFECE2E7578B4006E9ED5 /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
+		59DEFED32E758955006E9ED5 /* FeedStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedStore.xcdatamodel; sourceTree = "<group>"; };
 		59FDD74D2E6F1552002C0AC5 /* FeedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCachePolicy.swift; sourceTree = "<group>"; };
 		E750890A2E52C29700B71CF8 /* URLSessionHTTPCLientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPCLientTests.swift; sourceTree = "<group>"; };
 		E788F98F2E597FB100888881 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		592E434A2E6402C2006A665E /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				59DEFED22E758955006E9ED5 /* FeedStore.xcdatamodeld */,
 				59DEFEC62E754610006E9ED5 /* FeedStoreSpecs */,
 				592E434D2E64030E006A665E /* CacheFeedUseCaseTests.swift */,
 				591593382E6938C0002C407D /* LoadFeedFromCacheUseCaseTests.swift */,
@@ -419,6 +422,7 @@
 				E7FF38F22E4F33A7006A110B /* LoadFeedFromRemoteUseCaseTests.swift in Sources */,
 				59DEFEC02E75444F006E9ED5 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				E750890B2E52C29700B71CF8 /* URLSessionHTTPCLientTests.swift in Sources */,
+				59DEFED42E758955006E9ED5 /* FeedStore.xcdatamodeld in Sources */,
 				5915933B2E6939A6002C407D /* FeedStoreSpy.swift in Sources */,
 				59AAE7152E6D9CC90021BDC8 /* SharedTestHelpers.swift in Sources */,
 				592E434F2E64030E006A665E /* CacheFeedUseCaseTests.swift in Sources */,
@@ -787,6 +791,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		59DEFED22E758955006E9ED5 /* FeedStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				59DEFED32E758955006E9ED5 /* FeedStore.xcdatamodel */,
+			);
+			currentVersion = 59DEFED32E758955006E9ED5 /* FeedStore.xcdatamodel */;
+			name = FeedStore.xcdatamodeld;
+			path = EssentialFeed/FeedCache/FeedStore.xcdatamodeld;
+			sourceTree = SOURCE_ROOT;
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 080EDEE821B6DA7E00813479 /* Project object */;
 }
