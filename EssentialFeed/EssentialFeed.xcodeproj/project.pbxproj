@@ -200,8 +200,7 @@
 		598752782E64899800785A60 /* FeedCache */ = {
 			isa = PBXGroup;
 			children = (
-				59DEFED22E758955006E9ED5 /* FeedStore.xcdatamodeld */,
-				59DEFED72E758DF5006E9ED5 /* CoreDataFeedStore.swift */,
+				59AFCFC82E76E48C00553C03 /* Infrastructure */,
 				595A3E752E7316E700091A17 /* CodeableFeedStore.swift */,
 				59FDD74D2E6F1552002C0AC5 /* FeedCachePolicy.swift */,
 				5925B31F2E6BF95F002AD84A /* LocalFeedImage.swift */,
@@ -209,6 +208,23 @@
 				598752792E6489BA00785A60 /* LocalFeedLoader.swift */,
 			);
 			path = FeedCache;
+			sourceTree = "<group>";
+		};
+		59AFCFC82E76E48C00553C03 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				59AFCFC92E76E4C900553C03 /* CoreData */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		59AFCFC92E76E4C900553C03 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				59DEFED72E758DF5006E9ED5 /* CoreDataFeedStore.swift */,
+				59DEFED22E758955006E9ED5 /* FeedStore.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		59DEFEC62E754610006E9ED5 /* FeedStoreSpecs */ = {
@@ -804,7 +820,7 @@
 			);
 			currentVersion = 59DEFED32E758955006E9ED5 /* FeedStore.xcdatamodel */;
 			name = FeedStore.xcdatamodeld;
-			path = EssentialFeed/FeedCache/FeedStore.xcdatamodeld;
+			path = EssentialFeed/FeedCache/infrastructure/CoreData/FeedStore.xcdatamodeld;
 			sourceTree = SOURCE_ROOT;
 			versionGroupType = wrapper.xcdatamodel;
 		};
