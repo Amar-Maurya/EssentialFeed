@@ -14,6 +14,13 @@ internal class ManagedFeedImage: NSManagedObject {
     @NSManaged var location: String?
     @NSManaged var url: URL
     @NSManaged var cache: ManagedCache
+}
+
+extension ManagedFeedImage {
+    
+    internal var local: LocalFeedImage {
+        return LocalFeedImage(id: self.id, description: self.imageDescription, location: self.location, url: self.url)
+    }
     
     internal static func images(_ localFeedImage: [LocalFeedImage], context: NSManagedObjectContext) -> NSOrderedSet {
         return NSOrderedSet(array: localFeedImage.map { local in
@@ -26,7 +33,4 @@ internal class ManagedFeedImage: NSManagedObject {
         })
     }
     
-    internal var local: LocalFeedImage {
-        return LocalFeedImage(id: self.id, description: self.imageDescription, location: self.location, url: self.url)
-    }
 }
