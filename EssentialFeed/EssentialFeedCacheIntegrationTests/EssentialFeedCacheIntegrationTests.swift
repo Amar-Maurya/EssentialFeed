@@ -39,6 +39,40 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
        
     }
     
+    func test_load_deliversItemsSavedOnASeparateInstance() {
+        let sutToPerformSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+        
+        let feedItem = uniqueImageFeed().model
+        
+        let exp = expectation(description: "wait to save to data into cache")
+        
+        sutToPerformSave.save(feedItem) { insertError in
+            XCTAssertNil(insertError)
+            exp.fulfill()
+            
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        let expLoad = expectation(description: "wait to load the cache data")
+        sutToPerformLoad.load { result in
+            switch result {
+            case let .success(feed):
+                XCTAssertEqual(feed, feedItem)
+            case let .failure(error):
+                XCTFail("Test deliver no item on Empty cache got the error :\(error)")
+            }
+            
+            expLoad.fulfill()
+        }
+        
+        wait(for: [expLoad], timeout: 1.0)
+        
+    }
+    
+    // MARKS :- Helper
+    
     private func makeSUT() -> LocalFeedLoader {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
         let storeURL = testSpecificURL()
