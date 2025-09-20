@@ -18,7 +18,7 @@ private class RealmFeedStore {
 final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = RealmFeedStore()
+        let sut = makeSUT()
         
         let exp = expectation(description: "retrieve should complete")
         
@@ -38,7 +38,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         
-        let sut = RealmFeedStore()
+        let sut = makeSUT()
         
         let exp = expectation(description: "retrieve should complete")
         
@@ -99,5 +99,10 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
     }
     
+    private func makeSUT() -> RealmFeedStore {
+        let sut = RealmFeedStore()
+        trackForMemoryLeaks(sut)
+        return sut
+    }    
     
 }
