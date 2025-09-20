@@ -8,10 +8,32 @@
 import XCTest
 import EssentialFeed
 
+private class RealmFeedStore {
+    
+    func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
+        completion(.empty)
+    }
+}
+
 final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
+        let sut = RealmFeedStore()
         
+        let exp = expectation(description: "retrieve should complete")
+        
+        sut.retrieve { receiveResult in
+            switch receiveResult {
+            case .empty :
+                break
+            default:
+                XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(receiveResult) and expected retrieval instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
