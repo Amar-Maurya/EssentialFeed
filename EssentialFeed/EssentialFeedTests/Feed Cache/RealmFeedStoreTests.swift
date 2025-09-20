@@ -27,8 +27,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
         let sut = makeSUT()
 
-        expect(sut: sut, to: .empty)
-        expect(sut: sut, to: .empty)
+        expect(sut: sut, toRetrieveTwice: .empty)
         
     }
     
@@ -79,6 +78,11 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         let sut = RealmFeedStore()
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private func expect(sut: RealmFeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+        expect(sut: sut, to: .empty)
+        expect(sut: sut, to: .empty)
     }
     
     private func expect(sut: RealmFeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
