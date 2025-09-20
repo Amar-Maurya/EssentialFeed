@@ -8,13 +8,6 @@
 import XCTest
 import EssentialFeed
 
-private class RealmFeedStore {
-    
-    func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
-        completion(.empty)
-    }
-}
-
 final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -71,8 +64,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
     }
     
-    //Helper
-    
+    // Helper
     
     private func makeSUT(_ file: StaticString = #file, line: UInt = #line) -> RealmFeedStore {
         let sut = RealmFeedStore()
@@ -81,8 +73,8 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     private func expect(sut: RealmFeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
-        expect(sut: sut, to: .empty)
-        expect(sut: sut, to: .empty)
+        expect(sut: sut, to: expectedResult)
+        expect(sut: sut, to: expectedResult)
     }
     
     private func expect(sut: RealmFeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
