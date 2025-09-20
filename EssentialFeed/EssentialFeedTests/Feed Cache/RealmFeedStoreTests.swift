@@ -20,42 +20,15 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         
-        let exp = expectation(description: "retrieve should complete")
-        
-        sut.retrieve { receiveResult in
-            switch receiveResult {
-            case .empty :
-                break
-            default:
-                XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(receiveResult) and expected retrieval instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut: sut, to: .empty)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         
         let sut = makeSUT()
-        
-        let exp = expectation(description: "retrieve should complete")
-        
-        sut.retrieve { firstReceiveResult in
-            sut.retrieve { secondReceiveResult in
-                
-                switch (firstReceiveResult, secondReceiveResult) {
-                case (.empty, .empty):
-                    break
-                default:
-                    XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(firstReceiveResult) and expected \(secondReceiveResult) retrieval instead")
-                }
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+
+        expect(sut: sut, to: .empty)
+        expect(sut: sut, to: .empty)
         
     }
     
@@ -99,10 +72,31 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
     }
     
-    private func makeSUT() -> RealmFeedStore {
+    //Helper
+    
+    
+    private func makeSUT(_ file: StaticString = #file, line: UInt = #line) -> RealmFeedStore {
         let sut = RealmFeedStore()
-        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
-    }    
+    }
+    
+    private func expect(sut: RealmFeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+        
+        let exp = expectation(description: "retrieve should complete")
+        
+        sut.retrieve { firstReceiveResult in
+            switch (firstReceiveResult, expectedResult) {
+            case (.empty, .empty):
+                break
+            default:
+                XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(firstReceiveResult) and expected \(expectedResult) retrieval instead", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+    }
     
 }
