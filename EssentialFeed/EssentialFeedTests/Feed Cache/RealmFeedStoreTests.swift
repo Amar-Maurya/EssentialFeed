@@ -10,6 +10,16 @@ import EssentialFeed
 
 final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
+    override func tearDown() {
+        super.tearDown()
+        undoStoreSideEffects()
+    }
+    
+    override func setUp() {
+        super.setUp()
+        setupEmptyStoreState()
+    }
+    
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         
@@ -17,15 +27,27 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        
         let sut = makeSUT()
 
         expect(sut: sut, toRetrieveTwice: .empty)
-        
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
+        let sut = makeSUT()
         
+        let uniqueFeedImage = uniqueImageFeed().local
+        let timestamp = Date()
+      
+       let exp  = expectation(description: "Insert wating")
+        
+        sut.insert(uniqueFeedImage, timestamp: timestamp) { insertionError in
+            XCTAssertNil(insertionError)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        expect(sut: sut, to: .found(uniqueFeedImage, timestamp))
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
@@ -67,7 +89,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     // Helper
     
     private func makeSUT(_ file: StaticString = #file, line: UInt = #line) -> RealmFeedStore {
-        let sut = RealmFeedStore()
+         let sut = RealmFeedStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
@@ -85,6 +107,11 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
             switch (firstReceiveResult, expectedResult) {
             case (.empty, .empty):
                 break
+                
+            case let (.found(receiveFeedImages, receiveTimestamp), .found(expectedFeedImages, expectedTimeStamp)) :
+                XCTAssertEqual(receiveFeedImages, expectedFeedImages, file: file, line: line)
+                XCTAssertEqual(receiveTimestamp, expectedTimeStamp, file: file, line: line)
+                
             default:
                 XCTFail("Expected retrieving from non empty cache to deliver same found result, got \(firstReceiveResult) and expected \(expectedResult) retrieval instead", file: file, line: line)
             }
@@ -93,6 +120,24 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
         wait(for: [exp], timeout: 1.0)
         
+    }
+    
+    private func testSpecificStoreURL() -> URL {
+        let filename = "\(type(of:self)).store"
+        let tempDir = URL(fileURLWithPath: NSTemporaryDirectory())
+        return tempDir.appendingPathComponent(filename)
+    }
+    
+    private func setupEmptyStoreState() {
+        deleteStoreArtifacts()
+    }
+    
+    private func undoStoreSideEffects() {
+        deleteStoreArtifacts()
+    }
+    
+    private func deleteStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
     
 }
