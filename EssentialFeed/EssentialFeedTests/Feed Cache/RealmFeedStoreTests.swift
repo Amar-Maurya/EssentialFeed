@@ -65,33 +65,25 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_delete_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
         
-        delete(sut: sut)
+        assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        delete(sut: sut)
-        
-        expect(sut: sut, toRetrieveTwice: .empty)
+        assertThatDeleteHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
     func test_delete_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
         
-        insert(sut: sut, cache: (uniqueImageFeed().local, Date()))
-        
-        delete(sut: sut)
+        assertThatDeleteDeliversNoErrorOnNonEmptyCache(on: sut)
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
         let sut = makeSUT()
         
-        insert(sut: sut, cache: (uniqueImageFeed().local, Date()))
-        
-        delete(sut: sut)
-        
-        expect(sut: sut, to: .empty)
+        assertThatDeleteEmptiesPreviouslyInsertedCache(on: sut)
     }
     
     func test_storeSideEffects_runSerially() {
