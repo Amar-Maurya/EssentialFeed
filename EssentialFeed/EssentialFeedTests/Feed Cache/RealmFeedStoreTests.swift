@@ -37,15 +37,8 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         
         let uniqueFeedImage = uniqueImageFeed().local
         let timestamp = Date()
-      
-       let exp  = expectation(description: "Insert wating")
         
-        sut.insert(uniqueFeedImage, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError)
-            exp.fulfill()
-        }
-    
-        wait(for: [exp], timeout: 1.0)
+        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
         
         expect(sut: sut, to: .found(uniqueFeedImage, timestamp))
     }
@@ -56,14 +49,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
         let uniqueFeedImage = uniqueImageFeed().local
         let timestamp = Date()
       
-       let exp  = expectation(description: "Insert wating")
-        
-        sut.insert(uniqueFeedImage, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError)
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
         
         expect(sut: sut, toRetrieveTwice: .found(uniqueFeedImage, timestamp))
     }
@@ -111,6 +97,24 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     private func expect(sut: RealmFeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut: sut, to: expectedResult)
         expect(sut: sut, to: expectedResult)
+    }
+    
+    @discardableResult
+    private func insert(sut: RealmFeedStore, cache: (feed: [LocalFeedImage], timeStamp: Date), file: StaticString = #file, line: UInt = #line) -> Error? {
+        
+       let exp  = expectation(description: "Insert wating")
+        
+        var insertionError: Error?
+        
+        sut.insert(cache.feed, timestamp: cache.timeStamp) { insertionExpError in
+            XCTAssertNil(insertionExpError)
+            insertionError = insertionExpError
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+       return insertionError
     }
     
     private func expect(sut: RealmFeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
