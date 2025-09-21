@@ -23,35 +23,25 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut: sut, to: .empty)
+        assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
 
-        expect(sut: sut, toRetrieveTwice: .empty)
+        assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         let sut = makeSUT()
-        
-        let uniqueFeedImage = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
-        
-        expect(sut: sut, to: .found(uniqueFeedImage, timestamp))
+    
+        assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
         
-        let uniqueFeedImage = uniqueImageFeed().local
-        let timestamp = Date()
-      
-        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
-        
-        expect(sut: sut, toRetrieveTwice: .found(uniqueFeedImage, timestamp))
+        assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: sut)
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
