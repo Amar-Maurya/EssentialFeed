@@ -55,7 +55,12 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
         
+        let uniqueFeedImage = uniqueImageFeed().local
+        let timestamp = Date()
+      
+        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
     }
     
     func test_insert_deliversNoErrorOnNonEmptyCache() {
