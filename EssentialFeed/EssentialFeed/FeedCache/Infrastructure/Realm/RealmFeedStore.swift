@@ -92,7 +92,23 @@ public final class RealmFeedStore {
     }
     
     public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
-        completion(nil)
+        queue.async(flags: .barrier) { [storeURL] in
+            do {
+                let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
+                
+                let oldCaches = realm.objects(Cache.self)
+                if oldCaches.count > 0 {
+                    try realm.write {
+                        realm.delete(oldCaches)
+                    }
+                }
+                
+                completion(nil)
+                
+            } catch {
+                completion(error)
+            }
+        }
     }
 
 }
