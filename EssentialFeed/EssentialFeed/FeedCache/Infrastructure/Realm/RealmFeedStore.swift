@@ -17,41 +17,6 @@ public final class RealmFeedStore: FeedStore {
         self.storeURL = storeURL
     }
     
-    @objc(Cache)
-    class PersistedCache: Object {
-        @Persisted var timestamp: Date
-        @Persisted var feed: List<PersistedFeedImage>
-        
-        public  var feedImages: [LocalFeedImage] {
-            feed.map { $0.localFeedImage }
-        }
-    }
-    
-    @objc(RealmFeedImage)
-     class PersistedFeedImage: Object {
-        @Persisted var id: UUID
-        @Persisted var imageDescription: String?
-        @Persisted var location: String?
-        @Persisted var urlString: String
-        
-        var url: URL { URL(string: urlString)! }
-        
-        static func convert(localFeed: [LocalFeedImage]) -> [PersistedFeedImage] {
-            localFeed.map { feed in
-                let realmFeed = PersistedFeedImage()
-                realmFeed.id = feed.id
-                realmFeed.imageDescription = feed.description
-                realmFeed.location = feed.location
-                realmFeed.urlString = feed.url.absoluteString
-                return realmFeed
-            }
-        }
-        
-        public var localFeedImage: LocalFeedImage {
-            LocalFeedImage(id: id, description: imageDescription, location: location, url: url)
-        }
-    }
-    
     private let queue = DispatchQueue(label: "com.RealmFeedStore", qos: .userInteractive, attributes: .concurrent)
 
     public func retrieve(completion: @escaping RetrivalCompletion) {
