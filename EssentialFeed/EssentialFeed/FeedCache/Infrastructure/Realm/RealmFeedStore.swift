@@ -18,9 +18,9 @@ public final class RealmFeedStore: FeedStore {
     }
     
     @objc(Cache)
-    class Cache: Object {
+    class PersistedCache: Object {
         @Persisted var timestamp: Date
-        @Persisted var feed: List<RealmFeedImage>
+        @Persisted var feed: List<PersistedFeedImage>
         
         public  var feedImages: [LocalFeedImage] {
             feed.map { $0.localFeedImage }
@@ -28,7 +28,7 @@ public final class RealmFeedStore: FeedStore {
     }
     
     @objc(RealmFeedImage)
-     class RealmFeedImage: Object {
+     class PersistedFeedImage: Object {
         @Persisted var id: UUID
         @Persisted var imageDescription: String?
         @Persisted var location: String?
@@ -36,9 +36,9 @@ public final class RealmFeedStore: FeedStore {
         
         var url: URL { URL(string: urlString)! }
         
-        static func convert(localFeed: [LocalFeedImage]) -> [RealmFeedImage] {
+        static func convert(localFeed: [LocalFeedImage]) -> [PersistedFeedImage] {
             localFeed.map { feed in
-                let realmFeed = RealmFeedImage()
+                let realmFeed = PersistedFeedImage()
                 realmFeed.id = feed.id
                 realmFeed.imageDescription = feed.description
                 realmFeed.location = feed.location
@@ -59,7 +59,7 @@ public final class RealmFeedStore: FeedStore {
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
                 
-                if let cache = realm.objects(Cache.self).first {
+                if let cache = realm.objects(PersistedCache.self).first {
                     completion(.found(cache.feedImages, cache.timestamp))
                 } else {
                     completion(.empty)
@@ -76,11 +76,11 @@ public final class RealmFeedStore: FeedStore {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
                 try realm.write {
                     
-                    let oldCaches = realm.objects(Cache.self)
+                    let oldCaches = realm.objects(PersistedCache.self)
                     realm.delete(oldCaches)
                     
-                    let realmCache = Cache()
-                    realmCache.feed.append(objectsIn: RealmFeedImage.convert(localFeed: items))
+                    let realmCache = PersistedCache()
+                    realmCache.feed.append(objectsIn: PersistedFeedImage.convert(localFeed: items))
                     realmCache.timestamp = timestamp
                     realm.add(realmCache)
                 }
@@ -96,7 +96,7 @@ public final class RealmFeedStore: FeedStore {
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
                 
-                let oldCaches = realm.objects(Cache.self)
+                let oldCaches = realm.objects(PersistedCache.self)
                 if oldCaches.count > 0 {
                     try realm.write {
                         realm.delete(oldCaches)
