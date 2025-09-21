@@ -120,7 +120,34 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     func test_storeSideEffects_runSerially() {
+        var operationExp: [XCTestExpectation] = []
         
+        let sut = makeSUT()
+        
+        let op1 = expectation(description: "Insertion wait")
+        
+        sut.insert(uniqueImageFeed().local, timestamp: Date()) { _ in
+            op1.fulfill()
+            operationExp.append(op1)
+        }
+  
+        let op2 = expectation(description: "deletion wait")
+        
+        sut.deleteCachedFeed { deletionError in
+            op2.fulfill()
+            operationExp.append(op2)
+        }
+        
+        let op3 = expectation(description: "retrieve wait")
+        
+        sut.retrieve { retrieveResult in
+            op3.fulfill()
+            operationExp.append(op3)
+        }
+        
+        wait(for: [op1, op2, op3], timeout: 5.0)
+        
+        XCTAssertEqual(operationExp,  [op1, op2, op3])
     }
     
     // Helper
