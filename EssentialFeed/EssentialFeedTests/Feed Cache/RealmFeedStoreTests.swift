@@ -44,14 +44,28 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
             XCTAssertNil(insertionError)
             exp.fulfill()
         }
-        
+    
         wait(for: [exp], timeout: 1.0)
         
         expect(sut: sut, to: .found(uniqueFeedImage, timestamp))
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
+        let sut = makeSUT()
         
+        let uniqueFeedImage = uniqueImageFeed().local
+        let timestamp = Date()
+      
+       let exp  = expectation(description: "Insert wating")
+        
+        sut.insert(uniqueFeedImage, timestamp: timestamp) { insertionError in
+            XCTAssertNil(insertionError)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        expect(sut: sut, toRetrieveTwice: .found(uniqueFeedImage, timestamp))
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {

@@ -52,7 +52,7 @@ public final class RealmFeedStore {
         }
     }
     
-    private let queue = DispatchQueue(label: "com.example.RealmFeedStore", qos: .background, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "com.RealmFeedStore", qos: .userInteractive, attributes: .concurrent)
 
     public func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
         queue.async(flags: .barrier) { [storeURL] in
