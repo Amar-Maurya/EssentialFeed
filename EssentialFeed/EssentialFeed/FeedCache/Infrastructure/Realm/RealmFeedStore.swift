@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 
-public final class RealmFeedStore {
+public final class RealmFeedStore: FeedStore {
 
     private let storeURL: URL
     
@@ -54,7 +54,7 @@ public final class RealmFeedStore {
     
     private let queue = DispatchQueue(label: "com.RealmFeedStore", qos: .userInteractive, attributes: .concurrent)
 
-    public func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
+    public func retrieve(completion: @escaping RetrivalCompletion) {
         queue.async { [storeURL] in
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
@@ -70,7 +70,7 @@ public final class RealmFeedStore {
         }
     }
 
-    public func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
+    public func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         queue.async(flags: .barrier) { [storeURL] in
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
@@ -91,7 +91,7 @@ public final class RealmFeedStore {
         }
     }
     
-    public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         queue.async(flags: .barrier) { [storeURL] in
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
