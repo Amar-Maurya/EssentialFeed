@@ -101,7 +101,18 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
         
+        let exp = expectation(description: "Deletion Wait")
+        
+        sut.deleteCachedFeed { deletionError in
+            XCTAssertNil(deletionError)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        expect(sut: sut, toRetrieveTwice: .empty)
     }
     
     func test_delete_deliversNoErrorOnNonEmptyCache() {

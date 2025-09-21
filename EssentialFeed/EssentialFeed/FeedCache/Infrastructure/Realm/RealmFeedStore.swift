@@ -90,5 +90,9 @@ public final class RealmFeedStore {
             }
         }
     }
+    
+    public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+        completion(nil)
+    }
 
 }
