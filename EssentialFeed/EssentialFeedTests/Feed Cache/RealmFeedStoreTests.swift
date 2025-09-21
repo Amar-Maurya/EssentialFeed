@@ -47,34 +47,19 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_insert_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
         
-        let uniqueFeedImage = uniqueImageFeed().local
-        let timestamp = Date()
-      
-        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
+        assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
     }
     
     func test_insert_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
-        
-        insert(sut: sut, cache: (uniqueImageFeed().local, Date()))
-        
-        let uniqueFeedImage = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert(sut: sut, cache: (uniqueFeedImage, timestamp))
+    
+        assertThatInsertDeliversNoErrorOnNonEmptyCache(on: sut)
     }
     
     func test_insert_overridesPreviouslyInsertedCacheValues() {
         let sut = makeSUT()
         
-        insert(sut: sut, cache: (uniqueImageFeed().local, Date()))
-        
-        let latestFeedImages = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert(sut: sut, cache: (latestFeedImages, timestamp))
-        
-        expect(sut: sut, to: .found(latestFeedImages, timestamp))
+        assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
     }
     
     func test_delete_deliversNoErrorOnEmptyCache() {
