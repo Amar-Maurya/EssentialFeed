@@ -55,7 +55,7 @@ public final class RealmFeedStore {
     private let queue = DispatchQueue(label: "com.RealmFeedStore", qos: .userInteractive, attributes: .concurrent)
 
     public func retrieve(completion: @escaping FeedStore.RetrivalCompletion) {
-        queue.async(flags: .barrier) { [storeURL] in
+        queue.async { [storeURL] in
             do {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
                 
