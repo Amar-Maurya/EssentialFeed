@@ -152,19 +152,19 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     // Helper
     
-    private func makeSUT(_ file: StaticString = #file, line: UInt = #line) -> RealmFeedStore {
+    private func makeSUT(_ file: StaticString = #file, line: UInt = #line) -> FeedStore {
          let sut = RealmFeedStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
-    private func expect(sut: RealmFeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(sut: FeedStore, toRetrieveTwice expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut: sut, to: expectedResult)
         expect(sut: sut, to: expectedResult)
     }
     
     @discardableResult
-    private func delete(sut: RealmFeedStore, file: StaticString = #file, line: UInt = #line) -> Error? {
+    private func delete(sut: FeedStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Deletion Wait")
         
         var expError: Error? = nil
@@ -181,7 +181,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
      
     @discardableResult
-    private func insert(sut: RealmFeedStore, cache: (feed: [LocalFeedImage], timeStamp: Date), file: StaticString = #file, line: UInt = #line) -> Error? {
+    private func insert(sut: FeedStore, cache: (feed: [LocalFeedImage], timeStamp: Date), file: StaticString = #file, line: UInt = #line) -> Error? {
         
        let exp  = expectation(description: "Insert wating")
         
@@ -198,7 +198,7 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
        return insertionError
     }
     
-    private func expect(sut: RealmFeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(sut: FeedStore, to expectedResult: RetrieveCacheFeedResult, file: StaticString = #file, line: UInt = #line) {
         
         let exp = expectation(description: "retrieve should complete")
         
