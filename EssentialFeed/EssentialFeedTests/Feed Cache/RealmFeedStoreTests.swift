@@ -75,7 +75,16 @@ final class RealmFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     func test_insert_overridesPreviouslyInsertedCacheValues() {
+        let sut = makeSUT()
         
+        insert(sut: sut, cache: (uniqueImageFeed().local, Date()))
+        
+        let latestFeedImages = uniqueImageFeed().local
+        let timestamp = Date()
+        
+        insert(sut: sut, cache: (latestFeedImages, timestamp))
+        
+        expect(sut: sut, to: .found(latestFeedImages, timestamp))
     }
     
     func test_delete_deliversNoErrorOnEmptyCache() {
