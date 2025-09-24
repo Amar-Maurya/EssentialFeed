@@ -141,7 +141,18 @@
 		E7FF38F12E4F33A7006A110B /* LoadFeedFromRemoteUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedFromRemoteUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		591523EE2E83C0A400652F91 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				EssentialFeedCacheRealmIntegrationTests.swift,
+			);
+			target = 5919C6D12E78F47A00BDD418 /* EssentialFeedCacheIntegrationTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		591523EA2E83C03100652F91 /* EssentialFeedCacheRealmIntegrationTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (591523EE2E83C0A400652F91 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EssentialFeedCacheRealmIntegrationTests; sourceTree = "<group>"; };
 		5919C6D32E78F47A00BDD418 /* EssentialFeedCacheIntegrationTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeedCacheIntegrationTests; sourceTree = "<group>"; };
 		E7B394C12E5B359400C391CE /* EssentialFeedAPIEndToEndTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeedAPIEndToEndTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -185,6 +196,7 @@
 		080EDEE721B6DA7E00813479 = {
 			isa = PBXGroup;
 			children = (
+				591523EA2E83C03100652F91 /* EssentialFeedCacheRealmIntegrationTests */,
 				080EDEF321B6DA7E00813479 /* EssentialFeed */,
 				080EDEFE21B6DA7E00813479 /* EssentialFeedTests */,
 				E7B394C12E5B359400C391CE /* EssentialFeedAPIEndToEndTests */,
@@ -441,6 +453,7 @@
 				E7B394C62E5B359400C391CE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				591523EA2E83C03100652F91 /* EssentialFeedCacheRealmIntegrationTests */,
 				E7B394C12E5B359400C391CE /* EssentialFeedAPIEndToEndTests */,
 			);
 			name = EssentialFeedAPIEndToEndTests;
