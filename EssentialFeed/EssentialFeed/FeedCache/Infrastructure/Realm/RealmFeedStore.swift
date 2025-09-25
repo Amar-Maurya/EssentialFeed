@@ -49,9 +49,9 @@ public final class RealmFeedStore: FeedStore {
                     realmCache.timestamp = timestamp
                     realm.add(realmCache)
                 }
-                completion(nil)
+                completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -68,10 +68,10 @@ public final class RealmFeedStore: FeedStore {
                     }
                 }
                 
-                completion(nil)
+                completion(.success(()))
                 
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
