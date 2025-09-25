@@ -25,9 +25,9 @@ public final class RealmFeedStore: FeedStore {
                 let realm = try Realm(configuration: Realm.Configuration(fileURL: storeURL, deleteRealmIfMigrationNeeded: true))
                 
                 if let cache = realm.objects(PersistedCache.self).first {
-                    completion(.found(cache.feedImages, cache.timestamp))
+                    completion(.success(.some((cache.feedImages, cache.timestamp))))
                 } else {
-                    completion(.empty)
+                    completion(.success(.none))
                 }
             } catch {
                 completion(.failure(error))
@@ -49,9 +49,9 @@ public final class RealmFeedStore: FeedStore {
                     realmCache.timestamp = timestamp
                     realm.add(realmCache)
                 }
-                completion(nil)
+                completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -68,10 +68,10 @@ public final class RealmFeedStore: FeedStore {
                     }
                 }
                 
-                completion(nil)
+                completion(.success(()))
                 
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

@@ -6,15 +6,15 @@
 //
 import Foundation
 
-internal final class FeedCachePolicy {
+ final class FeedCachePolicy {
     private init() {}
     
-    internal static let calendar = Calendar(identifier: .gregorian)
-    internal static var maxCacheAgeInDays: Int {
+     static let calendar = Calendar(identifier: .gregorian)
+     static var maxCacheAgeInDays: Int {
         return 7
     }
     
-    internal static func validate( timeStamp: Date, against date: Date) -> Bool {
+     static func validate( timeStamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
         }
