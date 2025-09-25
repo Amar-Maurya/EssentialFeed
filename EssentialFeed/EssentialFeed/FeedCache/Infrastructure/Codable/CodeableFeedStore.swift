@@ -47,12 +47,12 @@ final public class CodableFeedStore: FeedStore {
         let storeUrl = self.storeURL
         queue.async {
             guard let data = try? Data(contentsOf: storeUrl) else {
-                return completion(.success(.empty))
+                return completion(.success(.none))
             }
             let decoder = JSONDecoder()
             do {
                 let feedImage = try decoder.decode(Cache.self, from: data)
-                completion(.success(.found(feedImage.localFeed, feedImage.timestamp)))
+                completion(.success(.some((feedImage.localFeed, feedImage.timestamp))))
             } catch {
                 completion(.failure(error))
             }
