@@ -21,7 +21,7 @@
 		5919C6E12E78FA7600BDD418 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BCE4A52E580A340067D148 /* XCTestCase+MemoryLeakTracking.swift */; };
 		5919C6E62E78FD0D00BDD418 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AAE7132E6D9CC20021BDC8 /* SharedTestHelpers.swift */; };
 		5919C6E72E78FD1500BDD418 /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AAE7102E6D9BCC0021BDC8 /* FeedCacheTestHelpers.swift */; };
-		591C8B142EA0F7E500D3087F /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
+		591C8B222EA0FAA600D3087F /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
 		5925B31A2E6BF88F002AD84A /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5925B3192E6BF882002AD84A /* RemoteFeedItem.swift */; };
 		5925B3202E6BF95F002AD84A /* LocalFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5925B31F2E6BF95F002AD84A /* LocalFeedImage.swift */; };
 		592E434F2E64030E006A665E /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592E434D2E64030E006A665E /* CacheFeedUseCaseTests.swift */; };
@@ -84,7 +84,7 @@
 			remoteGlobalIDString = 080EDEF021B6DA7E00813479;
 			remoteInfo = EssentialFeed;
 		};
-		591C8B152EA0F7E500D3087F /* PBXContainerItemProxy */ = {
+		591C8B242EA0FAA600D3087F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 080EDEE821B6DA7E00813479 /* Project object */;
 			proxyType = 1;
@@ -206,7 +206,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				591C8B142EA0F7E500D3087F /* EssentialFeed.framework in Frameworks */,
+				591C8B222EA0FAA600D3087F /* EssentialFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,7 +504,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				591C8B162EA0F7E500D3087F /* PBXTargetDependency */,
+				591C8B252EA0FAA600D3087F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				591C8B112EA0F7E500D3087F /* EssentialFeedIOS */,
@@ -751,11 +751,11 @@
 			target = 080EDEF021B6DA7E00813479 /* EssentialFeed */;
 			targetProxy = 5919C6D72E78F47A00BDD418 /* PBXContainerItemProxy */;
 		};
-		591C8B162EA0F7E500D3087F /* PBXTargetDependency */ = {
+		591C8B252EA0FAA600D3087F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
 			target = 080EDEF021B6DA7E00813479 /* EssentialFeed */;
-			targetProxy = 591C8B152EA0F7E500D3087F /* PBXContainerItemProxy */;
+			targetProxy = 591C8B242EA0FAA600D3087F /* PBXContainerItemProxy */;
 		};
 		E7B394C62E5B359400C391CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1102,8 +1102,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
@@ -1111,6 +1114,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.test.EssentialFeedIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1123,8 +1128,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
@@ -1132,6 +1140,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.test.EssentialFeedIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
