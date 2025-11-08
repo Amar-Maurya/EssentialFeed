@@ -111,14 +111,6 @@ private extension FeedViewController {
         refreshControl?.simulatePullToRefresh()
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        
-        super.viewIsAppearing(animated)
-        
-        onViewIsAppearing?(self)
-        
-    }
-    
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
